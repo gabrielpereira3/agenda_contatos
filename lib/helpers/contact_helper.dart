@@ -30,7 +30,7 @@ class ContactHelper {
 
   Future<Database> initDb() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, "contacts.db");
+    final path = join(databasesPath, "contactsnew.db");
 
     return openDatabase(
         path, version: 1, onCreate: (Database db, int newerVersion) async {
@@ -96,6 +96,8 @@ class Contact {
   String? email;
   String? phone;
   String? img;
+
+  Contact();
 
   Contact.fromMap(Map map){
     id = map[idColumn];
