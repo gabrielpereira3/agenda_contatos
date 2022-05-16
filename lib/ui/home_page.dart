@@ -9,30 +9,67 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   ContactHelper helper = ContactHelper();
 
+  List<Contact> contact = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
 
-    /*Contact c = Contact();
-    c.name = "Gabriel";
-    c.email = "gabriel.soares14563@gmail.com";
-    c.phone = "12345678";
-    c.img = "imgtest";
-
-    helper.saveContact(c);*/
-    
-    helper.getAllContacts().then((list){
-      print(list);
+    helper.getAllContacts().then((list) {
+      for (int i = 0; i < list.length; i++) {
+        setState(() {
+          contact.add(list[i]);
+        });
+      }
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Contatos"),
+        backgroundColor: Colors.redAccent,
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+        backgroundColor: Colors.redAccent,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(10),
+        itemCount: contact.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Text(contact[0].name!),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _contactCard(BuildContext context, int index) {
+    return GestureDetector(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
