@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../helpers/contact_helper.dart';
 
 class ContactPage extends StatefulWidget {
@@ -56,7 +58,7 @@ class _ContactPageState extends State<ContactPage> {
               FocusScope.of(context).requestFocus(_nameFocus);
             }
           },
-          child: Icon(Icons.save),
+          child: const Icon(Icons.save),
           backgroundColor: Colors.redAccent,
         ),
         body: SingleChildScrollView(
@@ -67,20 +69,34 @@ class _ContactPageState extends State<ContactPage> {
                 child: Container(
                   width: 140,
                   height: 140,
-                  decoration: BoxDecoration(
+                  decoration: _editedContact.img != null ?
+                  BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: _editedContact.img != null
-                          ? AssetImage(_editedContact.img!)
-                          : const AssetImage("images/person.png"),
+                      image: FileImage(File(_editedContact.img!)),
+                    ),
+                  ) :
+                  const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage("images/person.png"),
                     ),
                   ),
                 ),
+                onTap: () {
+                  final ImagePicker _picker = ImagePicker();
+                  _picker.pickImage(source: ImageSource.camera).then((file) {
+                    if(file == null) return;
+                    setState(() {
+                      _editedContact.img = file.path;
+                    });
+                  });
+                },
               ),
               TextField(
                 controller: _nameController,
                 focusNode: _nameFocus,
-                decoration: InputDecoration(labelText: "Nome"),
+                decoration: const InputDecoration(labelText: "Nome"),
                 onChanged: (text) {
                   _userEdited = true;
                   setState(() {
@@ -90,7 +106,7 @@ class _ContactPageState extends State<ContactPage> {
               ),
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: const InputDecoration(labelText: "Email"),
                 onChanged: (text) {
                   _userEdited = true;
                   _editedContact.email = text;
@@ -99,7 +115,7 @@ class _ContactPageState extends State<ContactPage> {
               ),
               TextField(
                 controller: _phoneController,
-                decoration: InputDecoration(labelText: "Phone"),
+                decoration: const InputDecoration(labelText: "Phone"),
                 onChanged: (text) {
                   _userEdited = true;
                   _editedContact.phone = text;
@@ -142,6 +158,14 @@ class _ContactPageState extends State<ContactPage> {
       return Future.value(false);
     } else {
       return Future.value(true);
+    }
+  }
+
+  ImageProvider _showImage() {
+    if(_editedContact.img != null) {
+      return FileImage(File(_editedContact.img!));
+    } else {
+      return const AssetImage("images/person.png");
     }
   }
 }
