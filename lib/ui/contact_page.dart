@@ -69,28 +69,22 @@ class _ContactPageState extends State<ContactPage> {
                 child: Container(
                   width: 140,
                   height: 140,
-                  decoration: _editedContact.img != null ?
-                  BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: FileImage(File(_editedContact.img!)),
-                    ),
-                  ) :
-                  const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: AssetImage("images/person.png"),
-                    ),
-                  ),
+                  decoration: _editedContact.img != null
+                      ? BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: FileImage(File(_editedContact.img!)),
+                          ),
+                        )
+                      : const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage("images/person.png"),
+                          ),
+                        ),
                 ),
                 onTap: () {
-                  final ImagePicker _picker = ImagePicker();
-                  _picker.pickImage(source: ImageSource.camera).then((file) {
-                    if(file == null) return;
-                    setState(() {
-                      _editedContact.img = file.path;
-                    });
-                  });
+                  _showOptions(context);
                 },
               ),
               TextField(
@@ -161,11 +155,66 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
-  ImageProvider _showImage() {
-    if(_editedContact.img != null) {
-      return FileImage(File(_editedContact.img!));
-    } else {
-      return const AssetImage("images/person.png");
-    }
+  _showOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (context) {
+            return Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextButton(
+                      onPressed: () {
+                        final ImagePicker _picker = ImagePicker();
+                        _picker
+                            .pickImage(source: ImageSource.camera)
+                            .then((file) {
+                          if (file == null) return;
+                          setState(() {
+                            _editedContact.img = file.path;
+                          });
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Tirar foto",
+                        style: TextStyle(color: Colors.redAccent, fontSize: 20),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextButton(
+                      onPressed: () {
+                        final ImagePicker _picker = ImagePicker();
+                        _picker
+                            .pickImage(source: ImageSource.gallery)
+                            .then((file) {
+                          if (file == null) return;
+                          setState(() {
+                            _editedContact.img = file.path;
+                          });
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Escolher foto da Galeria",
+                        style: TextStyle(color: Colors.redAccent, fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
