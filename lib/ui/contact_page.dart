@@ -58,7 +58,7 @@ class _ContactPageState extends State<ContactPage> {
               FocusScope.of(context).requestFocus(_nameFocus);
             }
           },
-          child: Icon(Icons.save),
+          child: const Icon(Icons.save),
           backgroundColor: Colors.redAccent,
         ),
         body: SingleChildScrollView(
@@ -69,12 +69,17 @@ class _ContactPageState extends State<ContactPage> {
                 child: Container(
                   width: 140,
                   height: 140,
-                  decoration: BoxDecoration(
+                  decoration: _editedContact.img != null ?
+                  BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: _editedContact.img != null ?
-                      FileImage(File(_editedContact.img!)) :
-                      FileImage(File("images/person.png")), /*?? AssetImage("images/person.png")*/
+                      image: FileImage(File(_editedContact.img!)),
+                    ),
+                  ) :
+                  const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage("images/person.png"),
                     ),
                   ),
                 ),
