@@ -74,12 +74,14 @@ class _ContactPageState extends State<ContactPage> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: FileImage(File(_editedContact.img!)),
+                            fit: BoxFit.cover
                           ),
                         )
                       : const BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage("images/person.png"),
+                            fit: BoxFit.cover
                           ),
                         ),
                 ),
